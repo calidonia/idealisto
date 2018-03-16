@@ -220,8 +220,8 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
       calle <- NA
     }
     
-    metros <- str_extract(pattern = "..m²|...m²|....m²|.....m²|......m²|.......m²|........m²|.........m²|..........m²", string = info)
-    metros <- str_replace_all(string = metros, pattern = " m²| |\\.", replacement = "")
+    metros <- str_extract(pattern = "..m&#178;|...m&#178;|....m&#178;|.....m&#178;|......m&#178;|.......m&#178;|........m&#178;|.........m&#178;|..........m&#178;", string = info)
+    metros <- str_replace_all(string = metros, pattern = " m&#178;| |\\.", replacement = "")
     metros <- as.numeric(metros)
     habit <- as.integer(str_replace_all(pattern = " hab.", replacement = "", string = str_extract(pattern = ".hab.|..hab.", string = info)))
     distrito <- str_replace_all(string = distrito, pattern = "Distrito ", replacement = "")
