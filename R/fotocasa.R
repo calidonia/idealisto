@@ -188,7 +188,7 @@ fotocasa <- function(url, ruta = "~/fotocasa.csv") {
                        precio_m2,
                        metros, 
                        rooms,
-                       baños,
+                       banhos,
                        planta,
                        descrip,
                        anunciante,
