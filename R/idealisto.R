@@ -194,8 +194,8 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
     }
     
     enderezo <- loc[1]
-    distrito <- as.character(loc[str_detect(ubi, pattern = "Distrito ") == TRUE])
-    barrio <- as.character(loc[str_detect(ubi, pattern = "Barrio ") == TRUE])
+    distrito <- as.character(loc[str_detect(loc, pattern = "Distrito ") == TRUE])
+    barrio <- as.character(loc[str_detect(loc, pattern = "Barrio ") == TRUE])
         
     if (length(distrito) == 0) {
       distrito <- str_replace(string = links_anuncios_tot[p], pattern = "https://www.idealista.com/alquiler-viviendas/", replacement = "")
