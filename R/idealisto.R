@@ -178,15 +178,15 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
     }
     
     if (length(prezo) == 0) {
-      precio <- NA
+      prezo <- NA
     }
     
     if (length(desc) == 0) {
-      descrip <- NA
+      desc <- NA
     }
     
     if (length(axencia) == 0) {
-      agencia <- NA
+      axencia <- NA
     }
     
     if (length(anunciante) == 0 | isTRUE(anunciante == " ")) {
@@ -271,6 +271,6 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
   
   end <- Sys.time()
   diff <- end - start
-  print(paste("Idealisto descargado lo", length(links_anuncios_tot), "dos anuncios"))
+  print(paste("Idealisto leva descargado o", length(links_anuncios_tot), "dos anuncios"))
   print(round(diff, digits = 1))
 }
