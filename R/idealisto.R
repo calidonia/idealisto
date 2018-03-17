@@ -242,11 +242,11 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
     
     detalles <- str_replace_all(pattern = '\"', replacement = "", string = detalles)
     
-    estats <- str_replace_all(pattern = '\"', replacement = "", string = estat)
+    estats <- str_replace_all(pattern = '\"', replacement = "", string = estats)
     
     data <- Sys.Date()
         
-    line <- data_frame(titulo, distrito, barrio, enderezo, superf, cuartos, andar, prezo, prezo_m2, desc, detalles, estat, anunciante, axencia, links_anuncios_tot[p], data)
+    line <- data_frame(titulo, distrito, barrio, enderezo, superf, cuartos, andar, prezo, prezo_m2, desc, detalles, estats, anunciante, axencia, links_anuncios_tot[p], data)
     print(line)
 
     process <- 100 - ((p/length(links_anuncios_tot))*100)
