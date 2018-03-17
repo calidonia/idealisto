@@ -29,13 +29,7 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
                        'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36',
                        'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:50.0) Gecko/20100101 Firefox/50.0')
     
-  if (area == "Concello" | area == "concello") {
-    x <- GET(url, add_headers('user-agent' = desktop_agents[sample(1:10, 1)]))
-    url_distris <- x %>% read_html() %>% html_nodes(".breadcrumb-subitems li li a") %>% html_attr(name = "href")
-    subarea <- "distrito"
-    url_distris_tot <- c()
-    
-  } else if (area == "Provincia" | area == "provincia") {
+  if (area == "Provincia" | area == "provincia") {
     x <- GET(url, add_headers('user-agent' = desktop_agents[sample(1:10, 1)]))
     url_distris <- x %>% read_html() %>% html_nodes(".breadcrumb-subitems li li a") %>% html_attr(name = "href")
     subarea <- "comarca"
@@ -43,8 +37,14 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
     
   } else if(area == "Comarca" | area == "comarca") {
     x <- GET(url, add_headers('user-agent' = desktop_agents[sample(1:10, 1)]))
-    url_distris <- x %>% read_html() %>% html_nodes(".breadcrumb-subitems li a") %>% html_attr(name = "href")
+    url_distris <- x %>% read_html() %>% html_nodes(".breadcrumb-subitems li li a") %>% html_attr(name = "href")
     subarea <- "concello"
+    url_distris_tot <- c()
+    
+  } else if (area == "Concello" | area == "concello") {
+    x <- GET(url, add_headers('user-agent' = desktop_agents[sample(1:10, 1)]))
+    url_distris <- x %>% read_html() %>% html_nodes(".breadcrumb-subitems li li a") %>% html_attr(name = "href")
+    subarea <- "distrito"
     url_distris_tot <- c()
     
   } else if (area == "Distrito" | area == "distrito") {
