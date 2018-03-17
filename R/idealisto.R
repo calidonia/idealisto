@@ -28,48 +28,40 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
                        'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36',
                        'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36',
                        'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:50.0) Gecko/20100101 Firefox/50.0')
-  
-  
-  
-  
+    
   if (area == "Concello" | area == "concello") {
     x <- GET(url, add_headers('user-agent' = desktop_agents[sample(1:10, 1)]))
     url_distris <- x %>% read_html() %>% html_nodes(".breadcrumb-subitems li li a") %>% html_attr(name = "href")
-    
     subarea <- "distrito"
     url_distris_tot <- c()
     
   } else if (area == "Provincia" | area == "provincia") {
     x <- GET(url, add_headers('user-agent' = desktop_agents[sample(1:10, 1)]))
     url_distris <- x %>% read_html() %>% html_nodes(".breadcrumb-subitems li li a") %>% html_attr(name = "href")
-    
     subarea <- "comarca"
     url_distris_tot <- c()
     
   } else if(area == "Comarca" | area == "comarca") {
-    
     x <- GET(url, add_headers('user-agent' = desktop_agents[sample(1:10, 1)]))
     url_distris <- x %>% read_html() %>% html_nodes(".breadcrumb-subitems li a") %>% html_attr(name = "href")
-    
     subarea <- "concello"
     url_distris_tot <- c()
     
   } else if (area == "Distrito" | area == "distrito") {
     url_distris <- c()
     url_distris_tot <- c()
+  
   } else {
     url_distris <- c()
     url_distris_tot <- c()
+  
   }
-  
-  
-  
+    
   d <- length(url_distris)
   
   repeat {
     links <- paste0("https://www.idealista.com", url_distris[d])
     url_distris_tot <- c(url_distris_tot, links)
-    
     d <- d - 1
     if (d <= 0) {
       break
@@ -84,9 +76,7 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
     print(url_distris_tot)
     url_distris_tot_ <- paste0("https://www.idealista.com", url_distris)
   }
-  
-  
-  
+    
   repeat {
     
     p <- length(url_distris_tot)
@@ -96,8 +86,7 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
     repeat {
       x <- GET(url_distris_tot[p], add_headers('user-agent' = desktop_agents[sample(1:10, 1)]))
       sig_pag <- x %>% read_html() %>% html_nodes(".icon-arrow-right-after") %>% html_attr(name = "href", default = NA)
-      
-      
+        
       if (length(sig_pag) == 0) {
         sig_pag <- NA
       } else {
@@ -117,11 +106,9 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
     if (url_distris_tot == "https://www.idealista.com") {
       break
     }
-    
-    
+      
     url_distris_tot_ <- c(url_distris_tot_, url_distris_tot)
-    
-    
+      
     if (area == "Distrito" | area == "distrito") {
       
     } else {
@@ -140,13 +127,10 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
   repeat {
     x <- GET(urls_paginas[p], add_headers('user-agent' = desktop_agents[sample(1:10, 1)]))
     links <- x %>% read_html() %>% html_nodes(".item-link") %>% html_attr(name = "href", default = NA)
-    
     links_anuncios <- paste0("https://www.idealista.com", links)
     links_anuncios_tot <- c(links_anuncios_tot, links_anuncios)
-    
     print(links_anuncios_tot)
     print("Capturando as ligazons a todolos anuncios...")
-    
     p <- p - 1
     if (p == 0) {
       break
@@ -173,8 +157,7 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
   print(paste("En breve comezara a extraccion dos datos deses", p, "anuncios, pero antes fara unha pausa de 30 segundos."))
   
   Sys.sleep(30)
-  
-  
+   
   start_2 <- Sys.time()
   
   repeat {
