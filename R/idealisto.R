@@ -2,7 +2,7 @@
 #' 
 #' This function scraps idealista (a spanish real estate website) and downloads all the rent ads in the given province, city, district or neighborhood.
 #' @param url An idealista website url that links to the area you want to scrap, e.g. 'https://www.idealista.com/alquiler-viviendas/madrid/arganzuela/'.
-#' @param area The type of area you want to scrap. It can take these values: 'Provincia', 'Comarca', 'Concello' or 'Distrito'.
+#' @param area The type of area you want to scrap. It can take these values: 'Provincia', 'Ciudad', 'Distrito' or 'Barrio'.
 #' @param ruta A valid path in your computer where you want to create the csv file.
 #' @return It returns a csv in the specified path
 #' @export
@@ -32,22 +32,22 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
   if (area == "Provincia" | area == "provincia") {
     x <- GET(url, add_headers('user-agent' = desktop_agents[sample(1:10, 1)]))
     url_distris <- x %>% read_html() %>% html_nodes(".breadcrumb-subitems li li a") %>% html_attr(name = "href")
-    subarea <- "comarca"
+    subarea <- "zona"
     url_distris_tot <- c()
     
-  } else if(area == "Comarca" | area == "comarca") {
+  } else if(area == "Ciudad" | area == "ciudad") {
     x <- GET(url, add_headers('user-agent' = desktop_agents[sample(1:10, 1)]))
-    url_distris <- x %>% read_html() %>% html_nodes(".breadcrumb-subitems li li a") %>% html_attr(name = "href")
-    subarea <- "concello"
-    url_distris_tot <- c()
-    
-  } else if (area == "Concello" | area == "concello") {
-    x <- GET(url, add_headers('user-agent' = desktop_agents[sample(1:10, 1)]))
-    url_distris <- x %>% read_html() %>% html_nodes(".breadcrumb-subitems li li a") %>% html_attr(name = "href")
+    url_distris <- x %>% read_html() %>% html_nodes(".breadcrumb-subitems li a") %>% html_attr(name = "href")
     subarea <- "distrito"
     url_distris_tot <- c()
     
   } else if (area == "Distrito" | area == "distrito") {
+    x <- GET(url, add_headers('user-agent' = desktop_agents[sample(1:10, 1)]))
+    url_distris <- x %>% read_html() %>% html_nodes(".breadcrumb-subitems li li a") %>% html_attr(name = "href")
+    subarea <- "barrio"
+    url_distris_tot <- c()
+    
+  } else if (area == "Barrio" | area == "barrio") {
     url_distris <- c()
     url_distris_tot <- c()
   
