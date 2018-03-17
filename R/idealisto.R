@@ -171,7 +171,7 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
     info <- x %>% read_html() %>% html_nodes(".info-features") %>% html_text()
     desc <- x %>% read_html() %>% html_nodes(".expandable") %>% html_text()
     detalles <- x %>% read_html() %>% html_nodes(".details-property") %>% html_text()
-    estat <- x %>% read_html() %>% html_nodes("#stats-ondemand") %>% html_text()
+    estats <- x %>% read_html() %>% html_nodes("#stats-ondemand") %>% html_text()
     
     if (length(titulo) == 0) {
       titulo <- NA
@@ -242,7 +242,7 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
     
     detalles <- str_replace_all(pattern = '\"', replacement = "", string = detalles)
     
-    estat <- str_replace_all(pattern = '\"', replacement = "", string = estat)
+    estats <- str_replace_all(pattern = '\"', replacement = "", string = estat)
     
     data <- Sys.Date()
         
