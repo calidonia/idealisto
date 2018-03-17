@@ -72,7 +72,7 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
     url_distris_tot <- url
     url_distris_tot_ <- url
   } else {
-    print(paste("Estas son as lingazons as paxinas principais de cada", subarea, ":"))
+    print(paste("Estas son as ligazons as paxinas principais de cada", subarea, ":"))
     print(url_distris_tot)
     url_distris_tot_ <- paste0("https://www.idealista.com", url_distris)
   }
