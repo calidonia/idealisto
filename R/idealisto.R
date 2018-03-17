@@ -154,7 +154,7 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
   p <- length(links_anuncios_tot)
   
   print(paste("Idealisto recompilou as urls de", p, "anuncios."))
-  print(paste("En breve comezara a extraccion dos datos deses", p, "anuncios, pero antes fara unha pausa de 30 segundos."))
+  print(paste("En breve comezara a extraccion dos datos deses", p, "anuncios, pero antes farase unha pausa de 30 segundos."))
   
   Sys.sleep(30)
    
