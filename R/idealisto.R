@@ -166,86 +166,73 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
     titulo <- x %>% read_html() %>% html_nodes(".main-info__title-main") %>% html_text()
     prezo <- x %>% read_html() %>% html_nodes(".h1-simulated") %>% html_text()
     loc <- x %>% read_html() %>% html_nodes("#headerMap li") %>% html_text()
-    anunciante <- x %>% read_html() %>% html_nodes(".name") %>% html_text()
-    axencia <- x %>% read_html() %>% html_nodes(".about-advertiser-name") %>% html_text()
     info <- x %>% read_html() %>% html_nodes(".info-features") %>% html_text()
     desc <- x %>% read_html() %>% html_nodes(".expandable") %>% html_text()
     detalles <- x %>% read_html() %>% html_nodes(".details-property") %>% html_text()
-    estats <- x %>% read_html() %>% html_nodes("#stats-ondemand") %>% html_text()
-    
-    if (length(titulo) == 0) {
-      titulo <- NA
-    }
-    
-    if (length(prezo) == 0) {
-      prezo <- NA
-    }
-    
-    if (length(desc) == 0) {
-      desc <- NA
-    }
-    
-    if (length(axencia) == 0) {
-      axencia <- NA
-    }
-    
-    if (length(anunciante) == 0 | isTRUE(anunciante == " ")) {
-      anunciante <- "Particular"
-    }
-    
-    enderezo <- loc[1]
-    distrito <- as.character(loc[str_detect(loc, pattern = "Distrito ") == TRUE])
-    barrio <- as.character(loc[str_detect(loc, pattern = "Barrio ") == TRUE])
+    actualiza <- x %>% read_html() %>% html_nodes("#stats-ondemand p") %>% html_text()
+    estats <- x %>% read_html() %>% html_nodes("#stats-ondemand li") %>% html_text()
+    anunciante <- x %>% read_html() %>% html_nodes(".name") %>% html_text()
+    axencia <- x %>% read_html() %>% html_nodes(".about-advertiser-name") %>% html_text()
         
+    if (length(titulo) == 0) {titulo <- NA}
+    
+    if (length(prezo) == 0) {prezo <- NA}
+    prezo <- as.integer(str_replace_all(pattern = " eur/mes|\\.",
+                                        replacement = "",
+                                        string = prezo))
+    
+    if (length(loc) == 0) {loc <- NA}
+    enderezo <- loc[1]
+    
+    distrito <- as.character(loc[str_detect(loc, pattern = "Distrito ") == TRUE])
+    distrito <- str_replace_all(pattern = "Distrito ",
+                                replacement = "",
+                                string = distrito)
     if (length(distrito) == 0) {
       distrito <- str_replace(string = links_anuncios_tot[p], pattern = "https://www.idealista.com/alquiler-viviendas/", replacement = "")
     }
     
-    if (length(barrio) == 0) {
-      barrio <- NA
-    }
-    
-    if (length(enderezo) == 0) {
-      enderezo <- NA
-    }
-    
-    distrito <- str_replace_all(pattern = "Distrito ",
-                                replacement = "",
-                                string = distrito)
-    
+    barrio <- as.character(loc[str_detect(loc, pattern = "Barrio ") == TRUE])
     barrio <- str_replace_all(pattern = "Barrio ",
                               replacement = "",
                               string = barrio)
+    if (length(barrio) == 0) {barrio <- NA}
+    
+    if (length(desc) == 0) {desc <- NA}
+    desc <- str_replace_all(pattern = '\"', replacement = "", string = desc)
     
     superf <- as.numeric(str_replace_all(pattern = " m\u00B2| |\\.",
                                          replacement = "",
                                          string = str_extract(pattern = "..m\u00B2|...m\u00B2|....m\u00B2|.....m\u00B2|......m\u00B2|.......m\u00B2|........m\u00B2|.........m\u00B2|..........m\u00B2",
                                                               string = info)))
+    if (length(superf) == 0) {superf <- NA}
     
+    prezo_m2 <- prezo/superf
+        
     cuartos <- as.integer(str_replace_all(pattern = " hab.",
                                           replacement = "",
                                           string = str_extract(pattern = ".hab.|..hab.",
                                                                string = info)))
+    if (length(cuartos) == 0) {cuartos <- NA}
     
-    andar <- as.integer(str_replace_all(pattern = " planta exterior| planta interior",
+    andar <- as.integer(str_replace_all(pattern = "Entreplanta| planta| planta exterior| planta interior",
                                         replacement = "",
-                                        string = str_extract(pattern = ".\u00AA planta exterior|..\u00AA planta exterior|.\u00AA planta interior|..\u00AA planta interior",
+                                        string = str_extract(pattern = "Entreplanta|.\u00AA planta|..\u00AA planta||.\u00AA planta exterior|..\u00AA planta exterior|.\u00AA planta interior|..\u00AA planta interior",
                                                              string = info)))
+    if (length(andar) == 0) {andar <- NA}
     
-    prezo <- as.integer(str_replace_all(pattern = " eur/mes|\\.",
-                                        replacement = "",
-                                        string = prezo))
-    
-    prezo_m2 <- prezo/superf
-    
-    desc <- str_replace_all(pattern = '\"', replacement = "", string = desc)
-    
+    if (length(detalles) == 0) {detalles <- NA}
     detalles <- str_replace_all(pattern = '\"', replacement = "", string = detalles)
     
+    if (length(estats) == 0) {estats <- NA}
     estats <- str_replace_all(pattern = '\"', replacement = "", string = estats)
-    
-    data <- Sys.Date()
         
+    if (length(axencia) == 0) {axencia <- NA}
+    
+    if (length(anunciante) == 0 | isTRUE(anunciante == " ")) {anunciante <- "Particular"}
+        
+    data <- Sys.Date()
+    
     line <- data_frame(titulo, distrito, barrio, enderezo, superf, cuartos, andar, prezo, prezo_m2, desc, detalles, estats, anunciante, axencia, links_anuncios_tot[p], data)
     print(line)
 
