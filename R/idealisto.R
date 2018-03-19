@@ -145,7 +145,8 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
                      "Distrito", "Barrio", "Enderezo",
                      "Superficie", "Cuartos", "Andar",
                      "Prezo", "Prezo_m2",
-                     "Descricion", "Detalles", "Estatisticas",
+                     "Descricion", "Detalles",
+                     "Actualizado_o", "Estatisticas",
                      "Anunciante", "Axencia",
                      "Url", "Data")
   
@@ -224,6 +225,11 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
     if (length(detalles) == 0) {detalles <- NA}
     detalles <- str_replace_all(pattern = '\"', replacement = "", string = detalles)
     
+    if (length(actualiza) == 0) {actualiza <- NA}
+    actualiza <- str_replace_all(pattern = "Anuncio actualizado el ", 
+                                 replacement = "",
+                                 string = actualiza)
+    
     if (length(estats) == 0) {estats <- NA}
     estats <- str_replace_all(pattern = '\"', replacement = "", string = estats)
         
@@ -233,7 +239,14 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
         
     data <- Sys.Date()
     
-    line <- data_frame(titulo, distrito, barrio, enderezo, superf, cuartos, andar, prezo, prezo_m2, desc, detalles, estats, anunciante, axencia, links_anuncios_tot[p], data)
+    line <- data_frame(titulo,
+                       distrito, barrio, enderezo,
+                       superf, cuartos, andar,
+                       prezo, prezo_m2,
+                       desc, detalles,
+                       actualiza, estats,
+                       anunciante, axencia,
+                       links_anuncios_tot[p], data)
     print(line)
 
     process <- 100 - ((p/length(links_anuncios_tot))*100)
