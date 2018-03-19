@@ -288,7 +288,7 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
     if (length(cocinha) == 0) {cocinha <- NA}
     if (length(amoblado) == 0) {amoblado <- NA}
 
-    if (length(str_extract(pattern = "Certificaci\u00F3n energ\uEE09tica: (\{\d+:\d+\}\,\{\d+:\d+\} kWh/m\u00B2 a\u00F1o$",
+    if (length(str_extract(pattern = "Certificaci\u00F3n energ\uEE09tica: ([[:digit:]]+\\,*[[:digit:]]* kWh/m\u00B2 a\u00F1o$",
                            string = detalles)) > 0) {
       cert_enerx <-1
       kwh_m2_ano <- as.numeric(str_replace_all(pattern = "\,",
