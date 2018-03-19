@@ -299,7 +299,7 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
                                                                                              string = detalles))))
       }
 
-    else if (length(str_extract(pattern = "(IPE no indicado)",
+    else if (length(str_extract(pattern = "IPE no indicado",
                                 string = detalles)) > 0) {
       cert_enerx <-1
       kwh_m2_ano <- NA
