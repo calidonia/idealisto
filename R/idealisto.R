@@ -147,7 +147,7 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
                      "Prezo", "Prezo_m2",
                      "Descricion",
                      "Detalles",
-                     "Casa", "Superficie_util", "Coef_aprov", "Obra_nova", "Orientacion", "Construido_o", "Cocinha", "Amoblado", "Cert_enerxetico", "kWh_m2_ano",
+                     "Casa", "Superficie_util", "Coef_aprov", "Banhos", "Balcon", "Terraza", "Obra_nova", "Empotrados", "Trasteiro", "Orientacion", "Construido_o", "Cocinha", "Amoblado", "Cert_enerxetico", "kWh_m2_ano",
                      "Ascensor", "Aire_acondicionado",
                      "Actualizado_o",
                      "Estatisticas", "Visitas", "Envios", "Contactos", "Favoritos",
@@ -250,11 +250,11 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
     
     if (length(str_extract(pattern = "Terraza", string = detalles)) == 0) {terraza = 0} else {terraza = 1}
     
-    if (length(str_extract(pattern = "Promoci\u00F3n de obra nueva", string = detalles)) == 0) {obranova = 0} else {obranova = 1}
+    if (length(str_extract(pattern = "Promoci\u00F3n de obra nueva", string = detalles)) == 0) {obra_nova = 0} else {obra_nova = 1}
     
     if (length(str_extract(pattern = "Armarios empotrados", string = detalles)) == 0) {empotrados = 0} else {empotrados = 1}
     
-    if (length(str_extract(pattern = "Trastero", string = detalles)) == 0) {trastero = 0} else {trastero = 1}
+    if (length(str_extract(pattern = "Trastero", string = detalles)) == 0) {trasteiro = 0} else {trasteiro = 1}
     
     orientacion <- str_replace_all(pattern = "Orientaci\u00F3n ",
                                    replacement = "",
@@ -371,7 +371,7 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
                        prezo, prezo_m2,
                        desc,
                        detalles,
-                       casa, superf_util, coef_util, obra_nova, orientacion, ano_cons, cocinha, amoblado, cert_enerx, kwh_m2_ano,
+                       casa, superf_util, coef_util, banhos, balcon, terraza, obra_nova, empotrados, trasteiro, orientacion, ano_cons, cocinha, amoblado, cert_enerx, kwh_m2_ano,
                        ascensor, aire_acond,
                        actualiza,
                        estats, visitas, envios, contactos, favoritos,
