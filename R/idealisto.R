@@ -213,7 +213,7 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
                                           replacement = "",
                                           string = str_extract(pattern = ".hab.|..hab.",
                                                                string = info)))
-    if (length(cuartos) == 0) {cuartos <- NA}
+    if (length(cuartos) == 0) {cuartos <- 1}
     
     andar <- as.integer(str_replace_all(pattern = "Entreplanta| planta| planta exterior| planta interior",
                                         replacement = "",
