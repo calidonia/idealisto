@@ -241,7 +241,7 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
     
     coef_util <- superf_util/superf
     
-    banhos <- as.numeric(str_replace_all(pattern = " ba\u00F1os?",
+    banhos <- as.integer(str_replace_all(pattern = " ba\u00F1os?",
                                          replacement = "",
                                          string = str_extract(pattern = "[[:digit:]]+ ba\u00F1os?",
                                                               string = info)))
@@ -333,27 +333,27 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
 
     # extraccion estatisticas
 
-    visitas <- as.numeric(str_replace_all(pattern = " visitas",
+    visitas <- as.integer(str_replace_all(pattern = " visitas",
                                           replacement = "",
-                                          string = str_extract(pattern = "\{\d+:\d+\} visitas",
+                                          string = str_extract(pattern = "[[:digit:]]+ visitas",
                                                                string = estats)))
     if (length(visitas) == 0) {visitas <- 0}
 
-    envios <- as.numeric(str_replace_all(pattern = " env\u00EDos a amigos",
+    envios <- as.integer(str_replace_all(pattern = " env\u00EDos a amigos",
                                          replacement = "",
-                                         string = str_extract(pattern = "\{\d+:\d+\} env\u00EDos a amigos",
+                                         string = str_extract(pattern = "[[:digit:]]+ env\u00EDos a amigos",
                                                               string = estats)))
     if (length(envios) == 0) {envios <- 0}
 
-    contactos <- as.numeric(str_replace_all(pattern = " contactos por email",
+    contactos <- as.integer(str_replace_all(pattern = " contactos por email",
                                             replacement = "",
-                                            string = str_extract(pattern = "\{\d+:\d+\} contactos por email",
+                                            string = str_extract(pattern = "[[:digit:]]+ contactos por email",
                                                                  string = estats)))
     if (length(contactos) == 0) {contactos <- 0}
 
-    favoritos <- as.numeric(str_replace_all(pattern = " veces guardado como favorito",
+    favoritos <- as.integer(str_replace_all(pattern = " veces guardado como favorito",
                                             replacement = "",
-                                            string = str_extract(pattern = "\{\d+:\d+\} veces guardado como favorito",
+                                            string = str_extract(pattern = "[[:digit:]]+ veces guardado como favorito",
                                                                  string = estats)))
     if (length(favoritos) == 0) {favoritos <- 0}
 
