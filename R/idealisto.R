@@ -259,7 +259,7 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
     orientacion <- str_replace_all(pattern = "Orientaci\u00F3n ",
                                    replacement = "",
                                    string = str_extract(pattern = "Orientaci\u00F3n ^\b[a-z_]+\b$|Orientaci\u00F3n ^\b[a-z_]+\b, ^\b[a-z_]+\b$",
-                                                        string = detalles)))
+                                                        string = detalles))
 
     if (length(orientacion) == 0) {orientacion <- NA}
 
