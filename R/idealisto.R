@@ -146,7 +146,9 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
                      "Superficie", "Cuartos", "Andar",
                      "Prezo", "Prezo_m2",
                      "Descricion",
-                     "Detalles", "Casa", "Superficie_util", "Coef_aprov", "Obra_nova", "Orientacion", "Construido_o", "Cocinha", "Amoblado",
+                     "Detalles",
+                     "Casa", "Superficie_util", "Coef_aprov", "Obra_nova", "Orientacion", "Construido_o", "Cocinha", "Amoblado", "Cert_enerxetico", "kWh_m2_ano",
+                     "Ascensor", "Aire_acondicionado",
                      "Actualizado_o",
                      "Estatisticas", "Visitas", "Envios", "Contactos", "Favoritos",
                      "Anunciante", "Axencia",
@@ -284,7 +286,34 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
     if (length(cocinha) == 0) {cocinha <- NA}
     if (length(amoblado) == 0) {amoblado <- NA}
     
+    if (length(str_extract(pattern = "Certificaci\u00F3n energ\uEE09tica: (\{\d+:\d+\}\,\{\d+:\d+\} kWh/m\u00B2 a\u00F1o$",
+                           string = detalles)) > 0) {
+      cert_enerx <-1
+      kwh_m2_ano <- as.numeric(str_replace_all(pattern = "\,",
+                                               replacement = "\.",
+                                               string = str_replace_all(pattern = " kWh/m\u00B2 a\u00F1o$",
+                                                                        replacement = "",
+                                                                        string = str_extract(pattern = "(\{\d+:\d+\}\,\{\d+:\d+\} kWh/m\u00B2 a\u00F1o$",
+                                                                                             string = detalles))))
+      }
+    else if (length(str_extract(pattern = "(IPE no indicado)",
+                           string = detalles)) > 0) {
+      cert_enerx <-1
+      kwh_m2_ano <- NA
+      }
+    else {
+      cert_enerx <-0
+      kwh_m2_ano <- NA
+      }
     
+    if (length(str_extract(pattern = "Acceso adaptado a personas con movilidad reducida", string = detalles)) == 0) {pmr = 0} else {pmr = 1}
+        
+    if (length(str_extract(pattern = "Con ascensor", string = detalles)) > 0) {ascensor = 1}
+    else if (length(str_extract(pattern = "Sin ascensor", string = detalles)) > 0) {ascensor = 0}
+    else {ascensor <- NA}
+        
+    if (length(str_extract(pattern = "Aire acondicionado", string = detalles)) > 0) {aire_acond = 1}
+    else {aire_ <- NA}
     
     ###
     
@@ -335,7 +364,9 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
                        superf, cuartos, andar,
                        prezo, prezo_m2,
                        desc,
-                       detalles, casa, superf_util, coef_util, obra_nova, orientacion, ano_cons, cocinha, amoblado,
+                       detalles,
+                       casa, superf_util, coef_util, obra_nova, orientacion, ano_cons, cocinha, amoblado, cert_enerx, kwh_m2_ano,
+                       ascensor, aire_acond,
                        actualiza,
                        estats, visitas, envios, contactos, favoritos,
                        anunciante, axencia,
