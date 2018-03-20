@@ -401,11 +401,13 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
                        # estats, visitas, envios, contactos, favoritos,
                        anunciante, axencia,
                        links_anuncios_tot[p], data)
-    print(line)
-
+    
     process <- 100 - ((p/length(links_anuncios_tot))*100)
-    print(links_anuncios_tot[p])
-    print(paste0("Idealisto leva descargados o ", round(process, digits = 1),"% dos anuncios."))
+    
+    cat(paste0(links_anuncios_tot[p], "\n")
+    cat(paste0(line, "\n")
+    cat(paste0("Idealisto leva descargados o ", round(process, digits = 1),"% dos anuncios.\n"))
+    cat("-------------------------------------------------\n")
 
     write.table(line, file = ruta, sep = ";", append = TRUE, quote = TRUE, col.names = FALSE, row.names = FALSE, na = "")
 
