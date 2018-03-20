@@ -147,7 +147,7 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
                      "Prezo", "Prezo_m2",
                      "Descricion",
                      "Detalles",
-                     "Casa", "Superf_cons", "Superficie_util", "Coef_aprov", "Banhos", "Balcon", "Terraza", "Obra_nova", "Empotrados", "Trasteiro",
+                     "Casa", "Superf_cons", "Superf_util", "Coef_aprov", "Banhos", "Balcon", "Terraza", "Obra_nova", "Empotrados", "Trasteiro",
                      "Norte", "Sur", "Leste", "Oeste", "Construido_o", "Cocinha", "Amoblado", "Cert_enerx", "kWh_m2_ano", "Cat_efic_enerx",
                      "PMR", "Ascensor", "Aire_acondicionado",
                      "Actualizado_o",
