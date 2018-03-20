@@ -246,7 +246,7 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
                                               replacement = "",
                                               string = str_extract(pattern = "[[:digit:]]+ m\u00B2 \u00FAtiles",
                                                                    string = detalles)))
-        
+    
     coef_util <- superf_util/superf
     
     banhos <- as.integer(str_replace_all(pattern = " ba\u00F1os?",
