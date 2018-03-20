@@ -226,9 +226,9 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
                                                                string = info)))
     if (is.na(cuartos)) {cuartos <- 1}
     
-    andar <- as.integer(str_replace_all(pattern = "Entreplanta|\u00AA planta",
+    andar <- as.integer(str_replace_all(pattern = "\u00AA planta",
                                         replacement = "",
-                                        string = str_extract(pattern = "Entreplanta|[[:digit:]]+\u00AA planta",
+                                        string = str_extract(pattern = "[[:digit:]]+\u00AA planta",
                                                              string = info)))
     if (is.na(andar)) {andar <- NA}
 
@@ -261,7 +261,7 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
       if (superf == superf_util) {superf <- superf_cons}
       }
     
-    if (!is.na(superf_util)) {coef_util <- superf_util/superf} else {coef_util <- NA}
+    coef_util <- superf_util/superf
     
     banhos <- as.integer(str_replace_all(pattern = " ba\u00F1os?",
                                          replacement = "",
@@ -336,9 +336,9 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
     
     if (!is.na(str_extract(pattern = "Acceso adaptado a personas con movilidad reducida", string = detalles))) {pmr = 1} else {pmr = 0}
 
-    ascensor <- NA
+    ascensor <- 0
     if (!is.na(str_extract(pattern = "Con ascensor", string = detalles))) {ascensor = 1}
-    if (!is.na(str_extract(pattern = "Sin ascensor", string = detalles))) {ascensor = 0}
+    if (!is.na(str_extract(pattern = "Sin ascensor", string = detalles))) {ascensor = -1}
     
     aire_acond <- 0
     if (!is.na(str_extract(pattern = "Aire acondicionado", string = detalles))) {aire_acond = 1}
