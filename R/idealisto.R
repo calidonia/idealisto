@@ -339,9 +339,9 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
                                  replacement = "",
                                  string = actualiza)
 
-    if (is.na(actualiza))) {actualiza <- NA}
+    if (is.na(actualiza)) {actualiza <- NA}
     
-    # if (is.na(estats))) {estats <- NA}
+    # if (is.na(estats)) {estats <- NA}
     # estats <- str_replace_all(pattern = '\"',
     #                           replacement = "",
     #                           string = estats)
