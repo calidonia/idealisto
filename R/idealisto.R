@@ -147,7 +147,7 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
                      "Prezo", "Prezo_m2",
                      "Descricion",
                      "Detalles",
-                     "Casa", "Superficie_util", "Coef_aprov", "Banhos", "Balcon", "Terraza", "Obra_nova", "Empotrados", "Trasteiro",
+                     "Casa", "Superf_cons", "Superficie_util", "Coef_aprov", "Banhos", "Balcon", "Terraza", "Obra_nova", "Empotrados", "Trasteiro",
                      "Norte", "Sur", "Leste", "Oeste", "Construido_o", "Cocinha", "Amoblado", "Cert_enerx", "kWh_m2_ano", "Cat_efic_enerx",
                      "PMR", "Ascensor", "Aire_acondicionado",
                      "Actualizado_o",
@@ -195,9 +195,8 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
                                 replacement = "",
                                 string = distrito)
     if (length(distrito) == 0) {
-      distrito <- str_replace(string = links_anuncios_tot[p],
-                              pattern = "https://www.idealista.com/alquiler-viviendas/",
-                              replacement = "")
+      # distrito <- str_replace(string = links_anuncios_tot[p], pattern = "https://www.idealista.com/alquiler-viviendas/", replacement = "")
+      distrito <- loc[2]
     }
     
     barrio <- as.character(loc[str_detect(loc, pattern = "Barrio ") == TRUE])
@@ -206,8 +205,12 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
                               string = barrio)
     if (length(barrio) == 0) {barrio <- NA}
     
+    desc <- desc[1]
+    
     desc <- str_replace_all(pattern = '\"', replacement = "", string = desc)
     if (length(desc) == 0) {desc <- NA}
+    
+    info <- info[1]
     
     superf <- as.numeric(str_replace_all(pattern = " m\u00B2",
                                          replacement = "",
@@ -229,8 +232,8 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
                                                              string = info)))
     if (is.na(andar)) {andar <- NA}
 
-    if (!is.na(str_extract(pattern = "exterior", string = info))) {exterior = 1}
-    else if (!is.na(str_extract(pattern = "interior", string = info))) {exterior = -1}
+    if (!is.na(str_extract(pattern = " exterior", string = info))) {exterior = 1}
+    else if (!is.na(str_extract(pattern = " interior", string = info))) {exterior = -1}
     else {exterior <- 0}
     
     detalles <- str_replace_all(pattern = '\"', replacement = "", string = detalles)
@@ -242,12 +245,21 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
     else if (!is.na(str_extract(pattern = "Chalet", string = detalles))) {casa = 1}
     else {casa = 0}
     
+    superf_cons <- as.integer(str_replace_all(pattern = " m\u00B2 construidos",
+                                              replacement = "",
+                                              string = str_extract(pattern = "[[:digit:]]+ m\u00B2 construidos",
+                                                                   string = detalles)))
+    
     superf_util <- as.integer(str_replace_all(pattern = " m\u00B2 \u00FAtiles",
                                               replacement = "",
                                               string = str_extract(pattern = "[[:digit:]]+ m\u00B2 \u00FAtiles",
                                                                    string = detalles)))
     
-    coef_util <- superf_util/superf
+    if (!is.na(superf_cons) AND !is.na(superf_util)) {
+      if (superf == superf_util) {superf <- superf_cons}
+      }
+    
+    if (!is.na(superf_util)) {coef_util <- superf_util/superf} else {coef_util <- NA}
     
     banhos <- as.integer(str_replace_all(pattern = " ba\u00F1os?",
                                          replacement = "",
@@ -384,7 +396,7 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
                        prezo, prezo_m2,
                        desc,
                        detalles,
-                       casa, superf_util, coef_util, banhos, balcon, terraza, obra_nova, empotrados, trasteiro,
+                       casa, superf_cons, superf_util, coef_util, banhos, balcon, terraza, obra_nova, empotrados, trasteiro,
                        norte, sur, leste, oeste, ano_cons, cocinha, amoblado, cert_enerx, kwh_m2_ano, cat_efic_enerx,
                        pmr, ascensor, aire_acond,
                        actualiza,
