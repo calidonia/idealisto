@@ -255,7 +255,7 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
                                               string = str_extract(pattern = "[[:digit:]]+ m\u00B2 \u00FAtiles",
                                                                    string = detalles)))
     
-    if (!is.na(superf_cons) AND !is.na(superf_util)) {
+    if (!is.na(superf_cons) & !is.na(superf_util)) {
       if (superf == superf_util) {superf <- superf_cons}
       }
     
