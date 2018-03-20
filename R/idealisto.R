@@ -180,38 +180,40 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
     anunciante <- x %>% read_html() %>% html_nodes(".name") %>% html_text()
     axencia <- x %>% read_html() %>% html_nodes(".about-advertiser-name") %>% html_text()
     
-    if (length(titulo) == 0) {titulo <- NA}
+    if (is.na(titulo)) {titulo <- NA}
     
-    if (length(prezo) == 0) {prezo <- NA}
     prezo <- as.integer(str_replace_all(pattern = " eur/mes|\\.",
                                         replacement = "",
                                         string = prezo))
+    if (is.na(prezo)) {prezo <- NA}
     
-    if (length(loc) == 0) {loc <- NA}
     enderezo <- loc[1]
+    if (!is.na(loc)) {loc <- NA}
     
     distrito <- as.character(loc[str_detect(loc, pattern = "Distrito ") == TRUE])
     distrito <- str_replace_all(pattern = "Distrito ",
                                 replacement = "",
                                 string = distrito)
-    if (length(distrito) == 0) {
-      distrito <- str_replace(string = links_anuncios_tot[p], pattern = "https://www.idealista.com/alquiler-viviendas/", replacement = "")
+    if (is.na(distrito)) {
+      distrito <- str_replace(string = links_anuncios_tot[p],
+                              pattern = "https://www.idealista.com/alquiler-viviendas/",
+                              replacement = "")
     }
     
     barrio <- as.character(loc[str_detect(loc, pattern = "Barrio ") == TRUE])
     barrio <- str_replace_all(pattern = "Barrio ",
                               replacement = "",
                               string = barrio)
-    if (length(barrio) == 0) {barrio <- NA}
+    if (is.na(barrio)) {barrio <- NA}
     
-    if (length(desc) == 0) {desc <- NA}
     desc <- str_replace_all(pattern = '\"', replacement = "", string = desc)
+    if (is.na(desc)) {desc <- NA}
     
     superf <- as.numeric(str_replace_all(pattern = " m\u00B2",
                                          replacement = "",
                                          string = str_extract(pattern = "[[:digit:]]+ m\u00B2",
                                                               string = info)))
-    if (length(superf) == 0) {superf <- NA}
+    if (is.na(superf)) {superf <- NA}
     
     prezo_m2 <- prezo/superf
     
@@ -219,25 +221,25 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
                                           replacement = "",
                                           string = str_extract(pattern = "[[:digit:]]+ hab\\.",
                                                                string = info)))
-    if (length(cuartos) == 0) {cuartos <- 1}
+    if (is.na(cuartos)) {cuartos <- 1}
     
     andar <- as.integer(str_replace_all(pattern = "Entreplanta|\u00AA planta",
                                         replacement = "",
                                         string = str_extract(pattern = "Entreplanta|[[:digit:]]+\u00AA planta",
                                                              string = info)))
-    if (length(andar) == 0) {andar <- NA}
+    if (is.na(andar)) {andar <- NA}
 
-    if (length(str_extract(pattern = "exterior", string = info)) > 0) {exterior = 1}
-    else if (length(str_extract(pattern = "interior", string = info)) > 0) {exterior = -1}
+    if (!is.na(str_extract(pattern = "exterior", string = info))) {exterior = 1}
+    else if (!is.na(str_extract(pattern = "interior", string = info))) {exterior = -1}
     else {exterior <- 0}
     
-    if (length(detalles) == 0) {detalles <- NA}
     detalles <- str_replace_all(pattern = '\"', replacement = "", string = detalles)
+    if (is.na(detalles)) {detalles <- NA}
     
     # extraccion detalles
     
-    if (length(str_extract(pattern = "Casa", string = detalles)) > 0) {casa = 1}
-    else if (length(str_extract(pattern = "Chalet", string = detalles)) > 0) {casa = 1}
+    if (!is.na(str_extract(pattern = "Casa", string = detalles))) {casa = 1}
+    else if (!is.na(str_extract(pattern = "Chalet", string = detalles))) {casa = 1}
     else {casa = 0}
     
     superf_util <- as.integer(str_replace_all(pattern = " m\u00B2 \u00FAtiles",
@@ -252,25 +254,25 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
                                          string = str_extract(pattern = "[[:digit:]]+ ba\u00F1os?",
                                                               string = detalles)))
     
-    if (str_extract(pattern = "Balc\u00F3n", string = detalles) == NA) {balcon = 0} else {balcon = 1}
+    if (!is.na(st_extract(pattern = "Balc\u00F3n", string = detalles))) {balcon = 1} else {balcon = 0}
     
-    if (str_extract(pattern = "Terraza", string = detalles) == NA) {terraza = 0} else {terraza = 1}
+    if (!is.na(str_extract(pattern = "Terraza", string = detalles))) {terraza = 1} else {terraza = 0}
     
-    if (str_extract(pattern = "Promoci\u00F3n de obra nueva", string = detalles) == NA) {obra_nova = 0} else {obra_nova = 1}
+    if (!is.na(str_extract(pattern = "Promoci\u00F3n de obra nueva", string = detalles))) {obra_nova = 1} else {obra_nova = 0}
     
-    if (str_extract(pattern = "Armarios empotrados", string = detalles) == NA) {empotrados = 0} else {empotrados = 1}
+    if (!is.na(str_extract(pattern = "Armarios empotrados", string = detalles))) {empotrados = 1} else {empotrados = 0}
     
-    if (str_extract(pattern = "Trastero", string = detalles) == NA) {trasteiro = 0} else {trasteiro = 1}
+    if (!is.na(str_extract(pattern = "Trastero", string = detalles))) {trasteiro = 1} else {trasteiro = 0}
     
     orientacion <- str_replace_all(pattern = "Orientaci\u00F3n",
                                    replacement = "",
                                    string = str_extract(pattern = "Orientaci\u00F3n [a-z]+, [a-z]+, [a-z]+|Orientaci\u00F3n [a-z]+, [a-z]+|Orientaci\u00F3n [a-z]+",
                                                         string = detalles))
 
-    if (is.na(str_extract(pattern = " norte", string = orientacion))) {norte = 0} else {norte = 1}
-    if (is.na(str_extract(pattern = " sur", string = orientacion))) {sur = 0} else {sur = 1}
-    if (is.na(str_extract(pattern = " este", string = orientacion))) {leste = 0} else {leste = 1}
-    if (is.na(str_extract(pattern = " oeste", string = orientacion))) {oeste = 0} else {oeste = 1}
+    if (!is.na(str_extract(pattern = " norte", string = orientacion))) {norte = 1} else {norte = 0}
+    if (!is.na(str_extract(pattern = " sur", string = orientacion))) {sur = 1} else {sur = 0}
+    if (!is.na(str_extract(pattern = " este", string = orientacion))) {leste = 1} else {leste = 0}
+    if (!is.na(str_extract(pattern = " oeste", string = orientacion))) {oeste = 1} else {oeste = 0}
     
     ano_cons <- as.integer(str_replace_all(pattern = "Construido en ",
                                            replacement = "",
@@ -281,20 +283,21 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
       cocinha = 1
       amoblado = 1
     }
-
-    if (!is.na(str_extract(pattern = "Cocina equipada y casa sin amueblar", string = detalles))) {
+    else if (!is.na(str_extract(pattern = "Cocina equipada y casa sin amueblar", string = detalles))) {
       cocinha = 1
       amoblado = 0
     }
-
-    if (!is.na(str_extract(pattern = "Cocina sin equipar y casa sin amueblar", string = detalles))) {
+    else if (!is.na(str_extract(pattern = "Cocina sin equipar y casa sin amueblar", string = detalles))) {
       cocinha = 0
       amoblado = 0
     }
-
-    if (length(str_extract(pattern = "kWh/m\u00B2 a\u00F1o",
-                           string = detalles)) > 0) {
-      cert_enerx <-1
+    else {
+      cocinha <- NA
+      amoblado <- NA
+      }
+    
+    if (!is.na(str_extract(pattern = "kWh/m\u00B2 a\u00F1o", string = detalles))) {
+      cert_enerx <- 1
       kwh_m2_ano <- as.numeric(str_replace_all(pattern = "\\,",
                                                replacement = "\\.",
                                                string = str_replace_all(pattern = " kWh/m\u00B2 a\u00F1o",
@@ -302,15 +305,11 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
                                                                         string = str_extract(pattern = "[[:digit:]]+\\,*[[:digit:]]* kWh/m\u00B2 a\u00F1o",
                                                                                              string = detalles))))
       }
-
-    else if (!is.na(str_extract(pattern = "IPE no indicado",
-                                string = detalles))) {
-      cert_enerx <-1
+    else if (!is.na(str_extract(pattern = "IPE no indicado", string = detalles))) {
+      cert_enerx <- 1
       kwh_m2_ano <- NA
       }
-    
     # certificacion energetica del edificio terminado (se asimila como idéntico al de la vivienda)
-    
     else {
       cert_enerx <-0
       kwh_m2_ano <- NA
@@ -340,7 +339,9 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
                                  replacement = "",
                                  string = actualiza)
 
-    # if (length(estats) == 0) {estats <- NA}
+    if (is.na(actualiza))) {actualiza <- NA}
+    
+    # if (is.na(estats))) {estats <- NA}
     # estats <- str_replace_all(pattern = '\"',
     #                           replacement = "",
     #                           string = estats)
