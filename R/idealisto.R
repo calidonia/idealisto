@@ -143,14 +143,15 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
   
   line <- data_frame("Titulo",
                      "Distrito", "Barrio", "Enderezo",
-                     "Superficie", "Cuartos", "Andar",
+                     "Superficie", "Cuartos", "Andar", "Exterior",
                      "Prezo", "Prezo_m2",
                      "Descricion",
                      "Detalles",
-                     "Casa", "Superficie_util", "Coef_aprov", "Banhos", "Balcon", "Terraza", "Obra_nova", "Empotrados", "Trasteiro", "Orientacion", "Construido_o", "Cocinha", "Amoblado", "Cert_enerxetico", "kWh_m2_ano",
-                     "Ascensor", "Aire_acondicionado",
+                     "Casa", "Superficie_util", "Coef_aprov", "Banhos", "Balcon", "Terraza", "Obra_nova", "Empotrados", "Trasteiro",
+                     "Norte", "Sur", "Leste", "Oeste", "Construido_o", "Cocinha", "Amoblado", "Cert_enerx", "kWh_m2_ano", "Cat_efic_enerx",
+                     "PMR", "Ascensor", "Aire_acondicionado",
                      "Actualizado_o",
-                     "Estatisticas", "Visitas", "Envios", "Contactos", "Favoritos",
+                     "Estatisticas", # "Visitas", "Envios", "Contactos", "Favoritos",
                      "Anunciante", "Axencia",
                      "Url", "Data")
   
@@ -174,8 +175,8 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
     info <- x %>% read_html() %>% html_nodes(".info-features") %>% html_text()
     desc <- x %>% read_html() %>% html_nodes(".expandable") %>% html_text()
     detalles <- x %>% read_html() %>% html_nodes(".details-property") %>% html_text()
-    actualiza <- x %>% read_html() %>% html_nodes("#stats-ondemand p") %>% html_text()
-    estats <- x %>% read_html() %>% html_nodes("#stats-ondemand li") %>% html_text()
+    actualiza <- x %>% read_html() %>% html_nodes("#stats p") %>% html_text()
+    # estats <- x %>% read_html() %>% html_nodes("#stats-ondemand li") %>% html_text()
     anunciante <- x %>% read_html() %>% html_nodes(".name") %>% html_text()
     axencia <- x %>% read_html() %>% html_nodes(".about-advertiser-name") %>% html_text()
     
@@ -206,87 +207,90 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
     if (length(desc) == 0) {desc <- NA}
     desc <- str_replace_all(pattern = '\"', replacement = "", string = desc)
     
-    superf <- as.numeric(str_replace_all(pattern = " m\u00B2| |\\.",
+    superf <- as.numeric(str_replace_all(pattern = " m\u00B2",
                                          replacement = "",
-                                         string = str_extract(pattern = "..m\u00B2|...m\u00B2|....m\u00B2|.....m\u00B2|......m\u00B2|.......m\u00B2|........m\u00B2|.........m\u00B2|..........m\u00B2",
+                                         string = str_extract(pattern = "[[:digit:]]+ m\u00B2",
                                                               string = info)))
     if (length(superf) == 0) {superf <- NA}
     
     prezo_m2 <- prezo/superf
     
-    cuartos <- as.integer(str_replace_all(pattern = " hab.",
+    cuartos <- as.integer(str_replace_all(pattern = " hab\\.",
                                           replacement = "",
-                                          string = str_extract(pattern = "[[:digit:]]+ hab.",
+                                          string = str_extract(pattern = "[[:digit:]]+ hab\\.",
                                                                string = info)))
     if (length(cuartos) == 0) {cuartos <- 1}
     
-    andar <- as.integer(str_replace_all(pattern = "Entreplanta| planta| planta exterior| planta interior",
+    andar <- as.integer(str_replace_all(pattern = "Entreplanta|\u00AA planta",
                                         replacement = "",
-                                        string = str_extract(pattern = "Entreplanta|[[:digit:]]+\u00AA planta|[[:digit:]]+\u00AA planta exterior|[[:digit:]]+\u00AA planta interior",
+                                        string = str_extract(pattern = "Entreplanta|[[:digit:]]+\u00AA planta",
                                                              string = info)))
     if (length(andar) == 0) {andar <- NA}
+
+    if (length(str_extract(pattern = "exterior", string = info)) > 0) {exterior = 1}
+    else if (length(str_extract(pattern = "interior", string = info)) > 0) {exterior = -1}
+    else {exterior <- 0}
     
     if (length(detalles) == 0) {detalles <- NA}
     detalles <- str_replace_all(pattern = '\"', replacement = "", string = detalles)
     
     # extraccion detalles
     
-    if (length(str_extract(pattern = "Case o chalet independiente", string = detalles)) == 0) {casa = 0} else {casa = 1}
+    if (length(str_extract(pattern = "Casa", string = detalles)) > 0) {casa = 1}
+    else if (length(str_extract(pattern = "Chalet", string = detalles)) > 0) {casa = 1}
+    else {casa = 0}
     
-    superf_util <- as.numeric(str_replace_all(pattern = " m\u00B2 .tiles",
+    superf_util <- as.integer(str_replace_all(pattern = " m\u00B2 \u00FAtiles",
                                               replacement = "",
-                                              string = str_extract(pattern = "[[:digit:]]+\\.*[[:digit:]]* m\u00B2 .tiles",
-                                                                   string = info)))
-    if (length(superf_util) == 0) {superf_util <- NA}
-    
+                                              string = str_extract(pattern = "[[:digit:]]+ m\u00B2 \u00FAtiles",
+                                                                   string = detalles)))
+        
     coef_util <- superf_util/superf
     
     banhos <- as.integer(str_replace_all(pattern = " ba\u00F1os?",
                                          replacement = "",
                                          string = str_extract(pattern = "[[:digit:]]+ ba\u00F1os?",
-                                                              string = info)))
+                                                              string = detalles)))
     
-    if (length(str_extract(pattern = "Balc\u00F3n", string = detalles)) == 0) {balcon = 0} else {balcon = 1}
+    if (str_extract(pattern = "Balc\u00F3n", string = detalles) == NA) {balcon = 0} else {balcon = 1}
     
-    if (length(str_extract(pattern = "Terraza", string = detalles)) == 0) {terraza = 0} else {terraza = 1}
+    if (str_extract(pattern = "Terraza", string = detalles) == NA) {terraza = 0} else {terraza = 1}
     
-    if (length(str_extract(pattern = "Promoci\u00F3n de obra nueva", string = detalles)) == 0) {obra_nova = 0} else {obra_nova = 1}
+    if (str_extract(pattern = "Promoci\u00F3n de obra nueva", string = detalles) == NA) {obra_nova = 0} else {obra_nova = 1}
     
-    if (length(str_extract(pattern = "Armarios empotrados", string = detalles)) == 0) {empotrados = 0} else {empotrados = 1}
+    if (str_extract(pattern = "Armarios empotrados", string = detalles) == NA) {empotrados = 0} else {empotrados = 1}
     
-    if (length(str_extract(pattern = "Trastero", string = detalles)) == 0) {trasteiro = 0} else {trasteiro = 1}
+    if (str_extract(pattern = "Trastero", string = detalles) == NA) {trasteiro = 0} else {trasteiro = 1}
     
-    orientacion <- str_replace_all(pattern = "Orientaci\u00F3n ",
+    orientacion <- str_replace_all(pattern = "Orientaci\u00F3n",
                                    replacement = "",
-                                   string = str_extract(pattern = "Orientaci\u00F3n ^\b[a-z_]+\b$|Orientaci\u00F3n ^\b[a-z_]+\b, ^\b[a-z_]+\b$",
+                                   string = str_extract(pattern = "Orientaci\u00F3n [a-z]+, [a-z]+, [a-z]+|Orientaci\u00F3n [a-z]+, [a-z]+|Orientaci\u00F3n [a-z]+",
                                                         string = detalles))
 
-    if (length(orientacion) == 0) {orientacion <- NA}
-
+    if (is.na(str_extract(pattern = " norte", string = orientacion))) {norte = 0} else {norte = 1}
+    if (is.na(str_extract(pattern = " sur", string = orientacion))) {sur = 0} else {sur = 1}
+    if (is.na(str_extract(pattern = " este", string = orientacion))) {leste = 0} else {leste = 1}
+    if (is.na(str_extract(pattern = " oeste", string = orientacion))) {oeste = 0} else {oeste = 1}
+    
     ano_cons <- as.integer(str_replace_all(pattern = "Construido en ",
                                            replacement = "",
                                            string = str_extract(pattern = "Construido en [[:digit:]]+",
                                                                 string = detalles)))
     
-    if (length(ano_cons) == 0) {ano_cons <- NA}
-
-    if (length(str_extract(pattern = "Totalmente amueblado y equipado", string = detalles)) > 0) {
+    if (!is.na(str_extract(pattern = "Totalmente amueblado y equipado", string = detalles))) {
       cocinha = 1
       amoblado = 1
     }
 
-    if (length(str_extract(pattern = "Cocina equipada y casa sin amueblar", string = detalles)) > 0) {
+    if (!is.na(str_extract(pattern = "Cocina equipada y casa sin amueblar", string = detalles))) {
       cocinha = 1
       amoblado = 0
     }
 
-    if (length(str_extract(pattern = "Cocina sin equipar y casa sin amueblar", string = detalles)) > 0) {
+    if (!is.na(str_extract(pattern = "Cocina sin equipar y casa sin amueblar", string = detalles))) {
       cocinha = 0
       amoblado = 0
     }
-
-    if (length(cocinha) == 0) {cocinha <- NA}
-    if (length(amoblado) == 0) {amoblado <- NA}
 
     if (length(str_extract(pattern = "kWh/m\u00B2 a\u00F1o",
                            string = detalles)) > 0) {
@@ -299,82 +303,91 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
                                                                                              string = detalles))))
       }
 
-    else if (length(str_extract(pattern = "IPE no indicado",
-                                string = detalles)) > 0) {
+    else if (!is.na(str_extract(pattern = "IPE no indicado",
+                                string = detalles))) {
       cert_enerx <-1
       kwh_m2_ano <- NA
       }
-
+    
+    # certificacion energetica del edificio terminado (se asimila como idéntico al de la vivienda)
+    
     else {
       cert_enerx <-0
       kwh_m2_ano <- NA
       }
 
-    if (length(str_extract(pattern = "Acceso adaptado a personas con movilidad reducida", string = detalles)) == 0) {pmr = 0} else {pmr = 1}
+    if (!is.na(kwh_m2_ano)) {
+      if (kwh_m2_ano <= 44.65) {cat_efic_enerx <- "A"}
+      if (kwh_m2_ano <= 72.35) {cat_efic_enerx <- "B"}
+      if (kwh_m2_ano <= 112.15) {cat_efic_enerx <- "C"}
+      if (kwh_m2_ano <= 172.35) {cat_efic_enerx <- "D"}
+      if (kwh_m2_ano > 172.35) {cat_efic_enerx <- "E"}
+      }
+    else cat_efic_enerx <- NA
+    
+    if (!is.na(str_extract(pattern = "Acceso adaptado a personas con movilidad reducida", string = detalles))) {pmr = 1} else {pmr = 0}
 
-    if (length(str_extract(pattern = "Con ascensor", string = detalles)) > 0) {ascensor = 1}
-    else if (length(str_extract(pattern = "Sin ascensor", string = detalles)) > 0) {ascensor = 0}
+    if (!is.na(str_extract(pattern = "Con ascensor", string = detalles))) {ascensor = 1}
+    else if (!is.na(str_extract(pattern = "Sin ascensor", string = detalles))) {ascensor = 0}
     else {ascensor <- NA}
 
-    if (length(str_extract(pattern = "Aire acondicionado", string = detalles)) > 0) {aire_acond = 1}
+    if (!is.na(str_extract(pattern = "Aire acondicionado", string = detalles))) {aire_acond = 1}
     else {aire_ <- NA}
 
     ###
 
-    if (length(actualiza) == 0) {actualiza <- NA}
     actualiza <- str_replace_all(pattern = "Anuncio actualizado el ", 
                                  replacement = "",
                                  string = actualiza)
 
-    if (length(estats) == 0) {estats <- NA}
-    estats <- str_replace_all(pattern = '\"',
-                              replacement = "",
-                              string = estats)
+    # if (length(estats) == 0) {estats <- NA}
+    # estats <- str_replace_all(pattern = '\"',
+    #                           replacement = "",
+    #                           string = estats)
 
     # extraccion estatisticas
 
-    visitas <- as.integer(str_replace_all(pattern = " visitas",
-                                          replacement = "",
-                                          string = str_extract(pattern = "[[:digit:]]+ visitas",
-                                                               string = estats)))
-    if (length(visitas) == 0) {visitas <- 0}
+    # visitas <- as.integer(str_replace_all(pattern = " visitas",
+    #                                       replacement = "",
+    #                                       string = str_extract(pattern = "[[:digit:]]+ visitas",
+    #                                                            string = estats)))
+    # if (length(visitas) == 0) {visitas <- 0}
 
-    envios <- as.integer(str_replace_all(pattern = " env\u00EDos a amigos",
-                                         replacement = "",
-                                         string = str_extract(pattern = "[[:digit:]]+ env\u00EDos a amigos",
-                                                              string = estats)))
-    if (length(envios) == 0) {envios <- 0}
+    # envios <- as.integer(str_replace_all(pattern = " env\u00EDos a amigos",
+    #                                      replacement = "",
+    #                                      string = str_extract(pattern = "[[:digit:]]+ env\u00EDos a amigos",
+    #                                                           string = estats)))
+    # if (length(envios) == 0) {envios <- 0}
 
-    contactos <- as.integer(str_replace_all(pattern = " contactos por email",
-                                            replacement = "",
-                                            string = str_extract(pattern = "[[:digit:]]+ contactos por email",
-                                                                 string = estats)))
-    if (length(contactos) == 0) {contactos <- 0}
+    # contactos <- as.integer(str_replace_all(pattern = " contactos por email",
+    #                                         replacement = "",
+    #                                         string = str_extract(pattern = "[[:digit:]]+ contactos por email",
+    #                                                              string = estats)))
+    # if (length(contactos) == 0) {contactos <- 0}
 
-    favoritos <- as.integer(str_replace_all(pattern = " veces guardado como favorito",
-                                            replacement = "",
-                                            string = str_extract(pattern = "[[:digit:]]+ veces guardado como favorito",
-                                                                 string = estats)))
-    if (length(favoritos) == 0) {favoritos <- 0}
+    # favoritos <- as.integer(str_replace_all(pattern = " veces guardado como favorito",
+    #                                         replacement = "",
+    #                                         string = str_extract(pattern = "[[:digit:]]+ veces guardado como favorito",
+    #                                                              string = estats)))
+    # if (length(favoritos) == 0) {favoritos <- 0}
 
     ###
 
-    if (length(axencia) == 0) {axencia <- NA}
-
-    if (length(anunciante) == 0 | isTRUE(anunciante == " ")) {anunciante <- "Particular"}
+    if (is.na(anunciante) | isTRUE(anunciante == " ")) {anunciante <- "Particular"}
 
     data <- Sys.Date()
 
     line <- data_frame(titulo,
                        distrito, barrio, enderezo,
-                       superf, cuartos, andar,
+                       superf, cuartos, andar, exterior,
                        prezo, prezo_m2,
                        desc,
                        detalles,
-                       casa, superf_util, coef_util, banhos, balcon, terraza, obra_nova, empotrados, trasteiro, orientacion, ano_cons, cocinha, amoblado, cert_enerx, kwh_m2_ano,
-                       ascensor, aire_acond,
+                       casa, superf_util, coef_util, banhos, balcon, terraza, obra_nova, empotrados, trasteiro,
+                       norte, sur, leste, oeste, ano_cons, cocinha, amoblado, cert_enerx, kwh_m2_ano, cat_efic_enerx,
+                       pmr, ascensor, aire_acond,
                        actualiza,
-                       estats, visitas, envios, contactos, favoritos,
+                       estats, # visitas, envios, contactos, favoritos,
                        anunciante, axencia,
                        links_anuncios_tot[p], data)
     print(line)
