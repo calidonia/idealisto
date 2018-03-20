@@ -187,7 +187,7 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
                                         string = prezo))
     if (is.na(prezo)) {prezo <- NA}
     
-    if (!is.na(loc)) {loc <- NA}
+    if (length(loc) == 0) {loc <- NA}
     enderezo <- loc[1]
         
     distrito <- as.character(loc[str_detect(loc, pattern = "Distrito ") == TRUE])
