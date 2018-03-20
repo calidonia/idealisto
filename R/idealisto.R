@@ -151,7 +151,7 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
                      "Norte", "Sur", "Leste", "Oeste", "Construido_o", "Cocinha", "Amoblado", "Cert_enerx", "kWh_m2_ano", "Cat_efic_enerx",
                      "PMR", "Ascensor", "Aire_acondicionado",
                      "Actualizado_o",
-                     "Estatisticas", # "Visitas", "Envios", "Contactos", "Favoritos",
+                     # "Estatisticas", "Visitas", "Envios", "Contactos", "Favoritos",
                      "Anunciante", "Axencia",
                      "Url", "Data")
   
@@ -388,7 +388,7 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
                        norte, sur, leste, oeste, ano_cons, cocinha, amoblado, cert_enerx, kwh_m2_ano, cat_efic_enerx,
                        pmr, ascensor, aire_acond,
                        actualiza,
-                       estats, # visitas, envios, contactos, favoritos,
+                       # estats, visitas, envios, contactos, favoritos,
                        anunciante, axencia,
                        links_anuncios_tot[p], data)
     print(line)
