@@ -180,7 +180,7 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
     anunciante <- x %>% read_html() %>% html_nodes(".name") %>% html_text()
     axencia <- x %>% read_html() %>% html_nodes(".about-advertiser-name") %>% html_text()
     
-    if (is.na(titulo)) {titulo <- NA}
+    if (length(titulo) == 0) {titulo <- NA}
     
     prezo <- as.integer(str_replace_all(pattern = " eur/mes|\\.",
                                         replacement = "",
@@ -234,7 +234,7 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
     else {exterior <- 0}
     
     detalles <- str_replace_all(pattern = '\"', replacement = "", string = detalles)
-    if (is.na(detalles)) {detalles <- NA}
+    if (length(detalles) == 0) {detalles <- NA}
     
     # extraccion detalles
     
@@ -339,7 +339,7 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
                                  replacement = "",
                                  string = actualiza)
 
-    if (is.na(actualiza)) {actualiza <- NA}
+    if (length(actualiza) == 0) {actualiza <- NA}
     
     # if (is.na(estats)) {estats <- NA}
     # estats <- str_replace_all(pattern = '\"',
@@ -374,7 +374,7 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
 
     ###
 
-    if (is.na(anunciante) | isTRUE(anunciante == " ")) {anunciante <- "Particular"}
+    if (length(anunciante) == 0 | isTRUE(anunciante == " ")) {anunciante <- "Particular"}
 
     data <- Sys.Date()
 
