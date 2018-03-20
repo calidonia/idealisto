@@ -207,7 +207,7 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
     if (is.na(barrio)) {barrio <- NA}
     
     desc <- str_replace_all(pattern = '\"', replacement = "", string = desc)
-    if (is.na(desc)) {desc <- NA}
+    if (length(desc) == 0) {desc <- NA}
     
     superf <- as.numeric(str_replace_all(pattern = " m\u00B2",
                                          replacement = "",
