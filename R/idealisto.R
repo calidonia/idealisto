@@ -232,18 +232,20 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
                                                              string = info)))
     if (is.na(andar)) {andar <- NA}
 
+    exterior <- 0
     if (!is.na(str_extract(pattern = " exterior", string = info))) {exterior = 1}
-    else if (!is.na(str_extract(pattern = " interior", string = info))) {exterior = -1}
-    else {exterior <- 0}
+    if (!is.na(str_extract(pattern = " interior", string = info))) {exterior = -1}
+    
+    # extraccion detalles
     
     detalles <- str_replace_all(pattern = '\"', replacement = "", string = detalles)
     if (length(detalles) == 0) {detalles <- NA}
     
-    # extraccion detalles
-    
+    casa <- 0
     if (!is.na(str_extract(pattern = "Casa", string = detalles))) {casa = 1}
-    else if (!is.na(str_extract(pattern = "Chalet", string = detalles))) {casa = 1}
-    else {casa = 0}
+    if (!is.na(str_extract(pattern = "Chalet", string = detalles))) {casa = 1}
+        
+    if (casa == 1) {exterior = 1}
     
     superf_cons <- as.integer(str_replace_all(pattern = " m\u00B2 construidos",
                                               replacement = "",
@@ -291,23 +293,25 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
                                            string = str_extract(pattern = "Construido en [[:digit:]]+",
                                                                 string = detalles)))
     
+    
+    cocinha <- NA
+    amoblado <- NA
     if (!is.na(str_extract(pattern = "Totalmente amueblado y equipado", string = detalles))) {
       cocinha = 1
       amoblado = 1
     }
-    else if (!is.na(str_extract(pattern = "Cocina equipada y casa sin amueblar", string = detalles))) {
+    if (!is.na(str_extract(pattern = "Cocina equipada y casa sin amueblar", string = detalles))) {
       cocinha = 1
       amoblado = 0
     }
-    else if (!is.na(str_extract(pattern = "Cocina sin equipar y casa sin amueblar", string = detalles))) {
+    if (!is.na(str_extract(pattern = "Cocina sin equipar y casa sin amueblar", string = detalles))) {
       cocinha = 0
       amoblado = 0
     }
-    else {
-      cocinha <- NA
-      amoblado <- NA
-      }
     
+    # certificacion energetica del edificio terminado (se asimila como idéntico al de la vivienda)
+    cert_enerx <-0
+    kwh_m2_ano <- NA
     if (!is.na(str_extract(pattern = "kWh/m\u00B2 a\u00F1o", string = detalles))) {
       cert_enerx <- 1
       kwh_m2_ano <- as.numeric(str_replace_all(pattern = "\\,",
@@ -317,34 +321,28 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
                                                                         string = str_extract(pattern = "[[:digit:]]+\\,*[[:digit:]]* kWh/m\u00B2 a\u00F1o",
                                                                                              string = detalles))))
       }
-    else if (!is.na(str_extract(pattern = "IPE no indicado", string = detalles))) {
+    if (!is.na(str_extract(pattern = "IPE no indicado", string = detalles))) {
       cert_enerx <- 1
       kwh_m2_ano <- NA
       }
-    # certificacion energetica del edificio terminado (se asimila como idéntico al de la vivienda)
-    else {
-      cert_enerx <-0
-      kwh_m2_ano <- NA
-      }
-
+    
     if (!is.na(kwh_m2_ano)) {
       if (kwh_m2_ano <= 44.65) {cat_efic_enerx <- "A"}
       if (kwh_m2_ano <= 72.35) {cat_efic_enerx <- "B"}
       if (kwh_m2_ano <= 112.15) {cat_efic_enerx <- "C"}
       if (kwh_m2_ano <= 172.35) {cat_efic_enerx <- "D"}
       if (kwh_m2_ano > 172.35) {cat_efic_enerx <- "E"}
-      }
-    else cat_efic_enerx <- NA
+      } else {cat_efic_enerx <- NA}
     
     if (!is.na(str_extract(pattern = "Acceso adaptado a personas con movilidad reducida", string = detalles))) {pmr = 1} else {pmr = 0}
 
+    ascensor <- NA
     if (!is.na(str_extract(pattern = "Con ascensor", string = detalles))) {ascensor = 1}
-    else if (!is.na(str_extract(pattern = "Sin ascensor", string = detalles))) {ascensor = 0}
-    else {ascensor <- NA}
-
+    if (!is.na(str_extract(pattern = "Sin ascensor", string = detalles))) {ascensor = 0}
+    
+    aire_acond <- 0
     if (!is.na(str_extract(pattern = "Aire acondicionado", string = detalles))) {aire_acond = 1}
-    else {aire_acond <- NA}
-
+    
     ###
 
     actualiza <- str_replace_all(pattern = "Anuncio actualizado el ", 
@@ -386,7 +384,7 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
 
     ###
 
-    if (length(anunciante) == 0 | isTRUE(anunciante == " ")) {anunciante <- "Particular"}
+    if (length(anunciante) == 0 | isTRUE(anunciante == " ")) {anunciante <- " Particular "}
 
     data <- Sys.Date()
 
