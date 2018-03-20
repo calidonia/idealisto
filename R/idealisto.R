@@ -254,7 +254,7 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
                                          string = str_extract(pattern = "[[:digit:]]+ ba\u00F1os?",
                                                               string = detalles)))
     
-    if (!is.na(st_extract(pattern = "Balc\u00F3n", string = detalles))) {balcon = 1} else {balcon = 0}
+    if (!is.na(str_extract(pattern = "Balc\u00F3n", string = detalles))) {balcon = 1} else {balcon = 0}
     
     if (!is.na(str_extract(pattern = "Terraza", string = detalles))) {terraza = 1} else {terraza = 0}
     
