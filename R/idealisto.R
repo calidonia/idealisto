@@ -187,9 +187,9 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
                                         string = prezo))
     if (is.na(prezo)) {prezo <- NA}
     
-    enderezo <- loc[1]
     if (!is.na(loc)) {loc <- NA}
-    
+    enderezo <- loc[1]
+        
     distrito <- as.character(loc[str_detect(loc, pattern = "Distrito ") == TRUE])
     distrito <- str_replace_all(pattern = "Distrito ",
                                 replacement = "",
@@ -331,7 +331,7 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
     else {ascensor <- NA}
 
     if (!is.na(str_extract(pattern = "Aire acondicionado", string = detalles))) {aire_acond = 1}
-    else {aire_ <- NA}
+    else {aire_acond <- NA}
 
     ###
 
