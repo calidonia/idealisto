@@ -406,6 +406,7 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
     print(line)
 
     process <- 100 - ((p/length(links_anuncios_tot))*100)
+    print(links_anuncios_tot[p])
     print(paste0("Idealisto leva descargados o ", round(process, digits = 1),"% dos anuncios."))
 
     write.table(line, file = ruta, sep = ";", append = TRUE, quote = TRUE, col.names = FALSE, row.names = FALSE, na = "")
