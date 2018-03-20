@@ -204,7 +204,7 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
     barrio <- str_replace_all(pattern = "Barrio ",
                               replacement = "",
                               string = barrio)
-    if (is.na(barrio)) {barrio <- NA}
+    if (length(barrio) == 0) {barrio <- NA}
     
     desc <- str_replace_all(pattern = '\"', replacement = "", string = desc)
     if (length(desc) == 0) {desc <- NA}
