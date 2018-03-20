@@ -405,7 +405,7 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
     process <- 100 - ((p/length(links_anuncios_tot))*100)
     
     cat(paste0(links_anuncios_tot[p], "\n"))
-    cat(paste0(line, "\n")
+    cat(paste0(line, "\n"))
     cat(paste0("Idealisto leva descargados o ", round(process, digits = 1),"% dos anuncios.\n"))
     cat("-------------------------------------------------\n")
 
