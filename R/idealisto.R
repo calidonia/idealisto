@@ -147,9 +147,9 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
                      "Prezo", "Prezo_m2",
                      "Descricion",
                      "Detalles",
-                     "Casa", "Superf_cons", "Superf_util", "Coef_aprov", "Banhos", "Balcon", "Terraza", "Obra_nova", "Empotrados", "Trasteiro",
+                     "Casa", "Superf_cons", "Superf_util", "Coef_aprov", "Banhos", "Garaxe", "Balcon", "Terraza", "Obra_nova", "Empotrados", "Trasteiro",
                      "Norte", "Sur", "Leste", "Oeste", "Construido_o", "Cocinha", "Amoblado", "Cert_enerx", "kWh_m2_ano", "Cat_efic_enerx",
-                     "PMR", "Ascensor", "Aire_acondicionado",
+                     "PMR", "Ascensor", "Aire_acondo",
                      "Actualizado_o",
                      # "Estatisticas", "Visitas", "Envios", "Contactos", "Favoritos",
                      "Anunciante", "Axencia",
@@ -275,6 +275,8 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
                                                               string = detalles)))
     
     if (is.na(banhos)) {banhos <- NA}
+    
+    if (!is.na(str_extract(pattern = "garaje", string = detalles))) {garaxe = 1} else {garaxe = 0}
     
     if (!is.na(str_extract(pattern = "Balc\u00F3n", string = detalles))) {balcon = 1} else {balcon = 0}
     
@@ -406,7 +408,7 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
                        prezo, prezo_m2,
                        desc,
                        detalles,
-                       casa, superf_cons, superf_util, coef_util, banhos, balcon, terraza, obra_nova, empotrados, trasteiro,
+                       casa, superf_cons, superf_util, coef_util, banhos, garaxe, balcon, terraza, obra_nova, empotrados, trasteiro,
                        norte, sur, leste, oeste, ano_cons, cocinha, amoblado, cert_enerx, kwh_m2_ano, cat_efic_enerx,
                        pmr, ascensor, aire_acond,
                        actualiza,
