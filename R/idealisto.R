@@ -336,11 +336,11 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
       }
     
     if (!is.na(kwh_m2_ano)) {
-      if (kwh_m2_ano <= 44.65) {cat_efic_enerx <- "A"}
-      if (kwh_m2_ano <= 72.35) {cat_efic_enerx <- "B"}
-      if (kwh_m2_ano <= 112.15) {cat_efic_enerx <- "C"}
-      if (kwh_m2_ano <= 172.35) {cat_efic_enerx <- "D"}
       if (kwh_m2_ano > 172.35) {cat_efic_enerx <- "E"}
+      if (kwh_m2_ano <= 172.35) {cat_efic_enerx <- "D"}
+      if (kwh_m2_ano <= 112.15) {cat_efic_enerx <- "C"}
+      if (kwh_m2_ano <= 72.35) {cat_efic_enerx <- "B"}
+      if (kwh_m2_ano <= 44.65) {cat_efic_enerx <- "A"}
       } else {cat_efic_enerx <- NA}
     
     if (!is.na(str_extract(pattern = "Acceso adaptado a personas con movilidad reducida", string = detalles))) {pmr = 1} else {pmr = 0}
@@ -394,6 +394,8 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
     ###
 
     if (length(anunciante) == 0 | isTRUE(anunciante == " "| anunciante == " Particular ")) {anunciante <- "Particular"}
+    if (anunciante == " Profesional ")) {anunciante <- "Profesional"}
+    
     if (length(axencia) == 0) {axencia <- NA}
     
     data <- Sys.Date()
