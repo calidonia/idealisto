@@ -252,10 +252,14 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
                                               string = str_extract(pattern = "[[:digit:]]+ m\u00B2 construidos",
                                                                    string = detalles)))
     
+    if (is.na(superf_cons)) {superf_cons <- NA}
+    
     superf_util <- as.integer(str_replace_all(pattern = " m\u00B2 \u00FAtiles",
                                               replacement = "",
                                               string = str_extract(pattern = "[[:digit:]]+ m\u00B2 \u00FAtiles",
                                                                    string = detalles)))
+    
+    if (is.na(superf_util)) {superf_util <- NA}
     
     if (!is.na(superf_cons) & !is.na(superf_util)) {
       if (superf == superf_util) {superf <- superf_cons}
@@ -263,10 +267,14 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
     
     coef_util <- superf_util/superf
     
+    if (is.na(coef_util)) {coef_util <- NA}
+    
     banhos <- as.integer(str_replace_all(pattern = " ba\u00F1os?",
                                          replacement = "",
                                          string = str_extract(pattern = "[[:digit:]]+ ba\u00F1os?",
                                                               string = detalles)))
+    
+    if (is.na(banhos)) {banhos <- NA}
     
     if (!is.na(str_extract(pattern = "Balc\u00F3n", string = detalles))) {balcon = 1} else {balcon = 0}
     
@@ -293,6 +301,7 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
                                            string = str_extract(pattern = "Construido en [[:digit:]]+",
                                                                 string = detalles)))
     
+    if (is.na(ano_cons)) {ano_cons <- NA}
     
     cocinha <- NA
     amoblado <- NA
@@ -384,8 +393,9 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
 
     ###
 
-    if (length(anunciante) == 0 | isTRUE(anunciante == " ")) {anunciante <- " Particular "}
-
+    if (length(anunciante) == 0 | isTRUE(anunciante == " "| anunciante == " Particular ")) {anunciante <- "Particular"}
+    if (length(axencia) == 0) {axencia <- NA}
+    
     data <- Sys.Date()
 
     line <- data_frame(titulo,
@@ -404,7 +414,7 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
     
     process <- 100 - ((p/length(links_anuncios_tot))*100)
     
-    cat(paste0(links_anuncios_tot[p], "\n"))
+    cat(paste0(links_anuncios_tot[p], " :\n"))
     print(line)
     cat(paste0("\nIdealisto leva descargados o ", round(process, digits = 1),"% dos anuncios.\n"))
     cat("-------------------------------------------------\n")
