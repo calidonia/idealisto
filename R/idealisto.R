@@ -438,6 +438,6 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
   
   end <- Sys.time()
   diff <- end - start
-  print(paste("Idealisto leva descargado o", length(links_anuncios_tot), "dos anuncios"))
+  print(paste("Idealisto acabou de descargar ", length(links_anuncios_tot), " anuncios"))
   print(round(diff, digits = 1))
 }
