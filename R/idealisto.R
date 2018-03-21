@@ -152,7 +152,7 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
                      "PMR", "Ascensor", "Aire_acondo",
                      "Actualizado_o",
                      # "Estatisticas", "Visitas", "Envios", "Contactos", "Favoritos",
-                     "Anunciante", "Axencia",
+                     "Profesional", "Axencia",
                      "Url", "Data")
   
   write.table(line, file = ruta, sep = ";", quote = FALSE, col.names = FALSE, row.names = FALSE, na = "")
@@ -395,8 +395,8 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
 
     ###
 
-    if (length(anunciante) == 0 | isTRUE(anunciante == " "| anunciante == " Particular ")) {anunciante <- "Particular"}
-    if (anunciante == " Profesional ")) {anunciante <- "Profesional"}
+    if (length(anunciante) == 0 | isTRUE(anunciante == " "| anunciante == " Particular ")) {profesional <- 0}
+    if (anunciante == " Profesional ")) {profesional <- 1}
     
     if (length(axencia) == 0) {axencia <- NA}
     
@@ -413,7 +413,7 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
                        pmr, ascensor, aire_acond,
                        actualiza,
                        # estats, visitas, envios, contactos, favoritos,
-                       anunciante, axencia,
+                       profesional, axencia,
                        links_anuncios_tot[p], data)
     
     process <- 100 - ((p/length(links_anuncios_tot))*100)
