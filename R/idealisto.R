@@ -396,7 +396,7 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
     ###
 
     if (length(anunciante) == 0 | isTRUE(anunciante == " "| anunciante == " Particular ")) {profesional <- 0}
-    if (anunciante == " Profesional ")) {profesional <- 1}
+    if (anunciante == " Profesional ") {profesional <- 1}
     
     if (length(axencia) == 0) {axencia <- NA}
     
