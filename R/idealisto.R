@@ -170,7 +170,7 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
     x <- GET(links_anuncios_tot[p], add_headers('user-agent' = desktop_agents[sample(1:10, 1)]))
     
     titulo <- x %>% read_html() %>% html_nodes(".main-info__title-main") %>% html_text()
-    prezo <- x %>% read_html() %>% html_nodes(".h1-simulated") %>% html_text()
+    prezo <- x %>% read_html() %>% html_nodes(".h3-simulated.txt-bold") %>% html_text()
     loc <- x %>% read_html() %>% html_nodes("#headerMap li") %>% html_text()
     info <- x %>% read_html() %>% html_nodes(".info-features") %>% html_text()
     desc <- x %>% read_html() %>% html_nodes(".expandable") %>% html_text()
