@@ -188,7 +188,7 @@ idealisto_venta <- function(url, area, ruta) {
     x <- GET(links_anuncios_tot$anuncio[p], add_headers('user-agent' = desktop_agents[sample(1:10, 1)]))
     
     titulo <- x %>% read_html() %>% html_nodes(".main-info__title-main") %>% html_text()
-    precio <- x %>% read_html() %>% html_nodes(".h3-simulated.txt-bold") %>% html_text()
+    precio <- x %>% read_html() %>% html_nodes("#fixed-toolbar strong") %>% html_text()
     ubi <- x %>% read_html() %>% html_nodes("#headerMap li") %>% html_text()
     anunciante <- x %>% read_html() %>% html_nodes(".name") %>% html_text()
     agencia <- x %>% read_html() %>% html_nodes(".about-advertiser-name") %>% html_text()
