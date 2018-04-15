@@ -185,7 +185,7 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
     prezo <- as.integer(str_replace_all(pattern = " eur/mes|\\.",
                                         replacement = "",
                                         string = prezo))
-    if (is.na(prezo)) {prezo <- NA}
+    if (length(prezo) == 0) {prezo <- NA}
     
     if (length(loc) == 0) {loc <- NA}
     enderezo <- loc[1]
