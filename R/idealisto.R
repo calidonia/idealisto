@@ -99,8 +99,8 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
         break
       }
       
-    # Espera un segundo antes de ler a seguinte páxina de resultados 
-    Sys.sleep(1)
+    # Espera dez segundo antes de ler a seguinte páxina de resultados 
+    Sys.sleep(10)
   
     }
     
@@ -139,8 +139,8 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
       break
     }
       
-    # Espera medio segundo antes de ler a seguinte páxina de resultados 
-    Sys.sleep(.5)
+    # Espera un segundo antes de ler a seguinte páxina de resultados 
+    Sys.sleep(1)
   
   }
   
