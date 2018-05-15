@@ -99,6 +99,9 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
         break
       }
       
+    # Espera un segundo antes de ler a seguinte páxina de resultados 
+    Sys.sleep(1)
+  
     }
     
     url_distris_tot <- paste0("https://www.idealista.com", sig_pag_tot)
@@ -135,6 +138,10 @@ idealisto <- function(url, area, ruta = "~/idealisto.csv") {
     if (p == 0) {
       break
     }
+      
+    # Espera medio segundo antes de ler a seguinte páxina de resultados 
+    Sys.sleep(.5)
+  
   }
   
   links_anuncios_tot <- unique(links_anuncios_tot)
